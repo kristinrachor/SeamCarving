@@ -2,6 +2,7 @@ package com.seamcarving;
 
 import processing.core.PApplet;
 import processing.core.PImage;
+import processing.event.KeyEvent;
 
 public class SeamCarvingDemo extends PApplet {
 
@@ -24,11 +25,18 @@ public class SeamCarvingDemo extends PApplet {
 		background(0);
 
 		g.image(image, 400, 300);
-		
+	}
+	
+	
+	public void keyPressed(KeyEvent e) {
+		if (e.getKey() == ' ') {
+			image = SeamCarving.carveSeam(image);
+		}
 	}
 	
 	
 	public static void main(String[] args) {
 		PApplet.main(new String[] {"com.seamcarving.SeamCarvingDemo"});
 	}
+	
 }
