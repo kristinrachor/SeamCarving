@@ -27,8 +27,63 @@ public class SeamCarving {
 		return energyArray;
 	}
 	
+	public static int[] calculateSeamEnergySum(int[] energyArray, int width, int height){
+		int[] seamEnergy = new int[energyArray.length];
+		System.arraycopy(energyArray, 0, seamEnergy, 0, width);
+		for(int i = 1; i < height; i++){
+			for(int j = 0; j < width; j++){
+				int left = Integer.MAX_VALUE;
+				int center = Integer.MAX_VALUE;
+				int right = Integer.MAX_VALUE;
+				if(j != 0)
+					left = seamEnergy[getIdx(j-1, i-1, width)];
+				center = seamEnergy[getIdx(j, i-1, width)];
+				if(j != width -1)
+					right = seamEnergy[getIdx(j+1, i-1, width)];
+				
+				int lowestSeam = Math.min(left, Math.min(center, right));
+				seamEnergy[getIdx(j, i, width)] = lowestSeam + energyArray[getIdx(j, i, width)];
+			}
+		}
+		return seamEnergy;
+	}
+	
+	public static int[] calcuateSeam(int[] seamEnergy, int width, int height){
+		int minSeam = Integer.MAX_VALUE;
+		int Xindex = 0;
+		for(int i = 0; i < width; i++){
+			if(seamEnergy[getIdx(i, height -1 , width)] < minSeam){
+				minSeam = seamEnergy[getIdx(i, height -1 , width)];
+				Xindex = i;
+			}
+		}
+		int[] seam = new int[height];
+		seam[height-1] = Xindex;
+		for(int j = height-2; j >= 0; j--){
+			int left = Integer.MAX_VALUE;
+			int center = Integer.MAX_VALUE;
+			int right = Integer.MAX_VALUE;
+			if(Xindex != 0)
+				left = seamEnergy[getIdx(Xindex -1, j, width)];
+			center = seamEnergy[getIdx(Xindex, j, width)];
+			if(Xindex != width -1)
+				right = seamEnergy[getIdx(Xindex + 1, j, width)];
+			if(left < center && left < right){
+				Xindex--;
+			}else if(right < center && right < left){
+				Xindex++;
+			}
+			seam[j] = Xindex;
+		}
+		return seam;
+	}
+	
 	public static PImage carveSeam(PImage image){
-		return carveSeam(new int[image.height], image);
+		int[] energy = calculateEnergy(image);
+		int[] sumEnergy = calculateSeamEnergySum(energy, image.width, image.height);
+		int[] seam = calcuateSeam(sumEnergy, image.width, image.height);
+		
+		return carveSeam(seam, image);
 	}
 	
 	public static int getRed(int val) {
