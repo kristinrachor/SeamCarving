@@ -23,9 +23,9 @@ public class SeamCarvingDemo extends PApplet {
 	
 	public void draw() {
 		background(0);
-		g.color(255, 255, 255);
+		g.fill(255, 255, 255);
 		g.image(image, 400, 300);
-		g.color(255, 0, 0, 255);
+		g.fill(255, 0, 0, 255);
 		if (SeamCarving.lastSeam != null) {
 			for (int i = 0; i < SeamCarving.lastSeam.length; i++) {
 				g.rect(SeamCarving.lastSeam[i] + 400 - image.width/2, i + 300 - image.height/2, 2, 2);
